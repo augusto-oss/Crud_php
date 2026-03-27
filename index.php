@@ -36,7 +36,7 @@ $lista = $db->query("SELECT * FROM contatos")->fetchAll();
 
         <!-- ALERTA -->
         <?php if (isset($_GET['msg']) && $_GET['msg'] == 'del_ok'): ?>
-            <div  id=""class="alert alert-danger mt-4">Contato removido</div>
+            <div  id="alert-Msg" class="alert alert-danger mt-4">Contato removido</div>
         <?php endif; ?>
 
         <a href="adicionar.php" class="btn btn-secondary mt-3">Adicionar Contato</a>
@@ -78,6 +78,16 @@ $lista = $db->query("SELECT * FROM contatos")->fetchAll();
             </div>
         </nav>
     </footer>
+
+    <script >
+        const alertMsg = document.getElementById('alert-Msg')
+
+        if(alertMsg){
+            setTimeout(() => {
+                alertMsg.style.display= 'none';
+            }, 3000);
+        }
+    </script>
 
     <script src="assets/js/bootstrap.min.js"></script>
 </body>

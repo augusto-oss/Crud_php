@@ -46,21 +46,21 @@ $lista = $db->query("SELECT * FROM bikes")->fetchAll();
 
     <?php if($_GET['msg'] == 'add_ok'): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            ✅ Peça adicionada com sucesso!
+            ✅ Bike adicionada com sucesso!
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     <?php endif; ?>
 
     <?php if($_GET['msg'] == 'edit_ok'): ?>
         <div class="alert alert-primary alert-dismissible fade show" role="alert">
-            ✏️ Peça atualizada com sucesso!
+            ✏️ Bike atualizada com sucesso!
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     <?php endif; ?>
 
     <?php if($_GET['msg'] == 'del_ok'): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            🗑️ Peça removida com sucesso!
+            🗑️ Bike removida com sucesso!
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     <?php endif; ?>

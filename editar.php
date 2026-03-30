@@ -1,81 +1,78 @@
-<?php require 'config.php';
+<?php
+require 'config.php';
 
-$id = $_GET['id'] ?? '';
+$id = $_GET['id'];
 
-if (empty($id)) {
-    header("Location: index.php");
-    exit;
-}
-if (!empty($_POST['nome']) && !empty($_POST['email'])) {
+if ($_POST) {
+    $codigo = $_POST['codigo'];
+    $modelo = $_POST['modelo'];
+    $status = $_POST['status'];
 
-    $nome = $_POST['nome'];
-    $email = $_POST['email'];
-    $id = $_POST['id']; // importante!
-
-    $sql = $db->prepare("UPDATE contatos SET nome = :nome, email = :email WHERE id = :id");
-    $sql->bindValue(':nome', $nome);
-    $sql->bindValue(':email', $email);
+    $sql = $db->prepare("UPDATE bikes SET codigo=:c, modelo=:m, status=:s WHERE id=:id");
+    $sql->bindValue(':c', $codigo);
+    $sql->bindValue(':m', $modelo);
+    $sql->bindValue(':s', $status);
     $sql->bindValue(':id', $id);
     $sql->execute();
 
-    header("Location: index.php");
+    header("Location: index.php?msg=edit_ok");
     exit;
 }
-$sql = $db->prepare("SELECT * FROM contatos WHERE id = :id");
+
+$sql = $db->prepare("SELECT * FROM bikes WHERE id = :id");
 $sql->bindValue(':id', $id);
 $sql->execute();
-
-$info = $sql->fetch();
-
+$bike = $sql->fetch();
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de contato</title>
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<meta charset="UTF-8">
+<title>Editar Bike</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body>
-    <nav class="navbar bg-dark navbar-dark">
-        <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1 mx-auto">SISTEMA DE CONTATO</span>
+<body class="bg-light">
+
+<div class="container mt-5">
+
+    <div class="card shadow col-md-6 mx-auto">
+        <div class="card-header bg-warning text-center">
+            ✏️ Editar Bike
         </div>
-    </nav>
 
-    <div class="container mt-3">
+        <div class="card-body">
 
-        <h3>Editar</h3>
+            <form method="POST">
 
-        <form method="POST">
-            <input type="hidden" name="id" value="<?= $id ?>">
+                <div class="mb-3">
+                    <label>Código</label>
+                    <input type="text" name="codigo" class="form-control" value="<?= $bike['codigo'] ?>">
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label">Nome:</label>
-                <input type="text" class="form-control" name="nome" value="<?= $info['nome'] ?>" required>
-            </div>
+                <div class="mb-3">
+                    <label>Modelo</label>
+                    <input type="text" name="modelo" class="form-control" value="<?= $bike['modelo'] ?>">
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label">E-mail:</label>
-                <input type="email" class="form-control" name="email" value="<?= $info['email'] ?>" required>
-            </div>
+                <div class="mb-3">
+                    <label>Status</label>
+                    <select name="status" class="form-select">
+                        <option value="disponivel" <?= $bike['status']=='disponivel'?'selected':'' ?>>Disponível</option>
+                        <option value="alugada" <?= $bike['status']=='alugada'?'selected':'' ?>>Alugada</option>
+                    </select>
+                </div>
 
-            <button type="submit" class="btn btn-primary">Salvar</button>
-            <a href="index.php" class="btn btn-secondary">Voltar</a>
-        </form>
+                <button class="btn btn-primary w-100">Salvar</button>
+                <a href="index.php" class="btn btn-secondary w-100 mt-2">Voltar</a>
+
+            </form>
+
+        </div>
     </div>
-    <footer>
-        <nav class="navbar">
-            <div class="container-fluid">
-                <span class="navbar mx-auto">&copy; Todos os direitos reservados</span>
-            </div>
-        </nav>
-    </footer>
 
-    <script src="assets/js/bootstrap.min.js"></script>
+</div>
+
 </body>
-
 </html>

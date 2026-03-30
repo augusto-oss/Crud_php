@@ -3,93 +3,119 @@ require 'config.php';
 
 if (!empty($_GET['del'])) {
     $id = $_GET['del'];
-
-    $sql = $db->prepare("DELETE FROM contatos WHERE id = :id");
+    $sql = $db->prepare("DELETE FROM bikes WHERE id = :id");
     $sql->bindValue(':id', $id);
     $sql->execute();
-
     header("Location: index.php?msg=del_ok");
     exit;
 }
 
-$lista = $db->query("SELECT * FROM contatos")->fetchAll();
+$lista = $db->query("SELECT * FROM bikes")->fetchAll();
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de contato</title>
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<meta charset="UTF-8">
+<title>Locadora de Bikes</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
+<body class="bg-light">
 
-<body>
-    <nav class="navbar bg-dark navbar-dark">
-        <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1 mx-auto">SISTEMA DE CONTATO</span>
-        </div>
-    </nav>
-
+<nav class="navbar navbar-dark bg-primary">
     <div class="container">
+        <span class="navbar-brand mx-auto fw-bold">
+            LOCADORA DE BIKES
+        </span>
+    </div>
+</nav>
 
-        <!-- ALERTA -->
-        <?php if (isset($_GET['msg']) && $_GET['msg'] == 'del_ok'): ?>
-            <div  id="alert-Msg" class="alert alert-danger mt-4">Contato removido</div>
-        <?php endif; ?>
+<div class="container mt-4">
 
-        <a href="adicionar.php" class="btn btn-secondary mt-3">Adicionar Contato</a>
+    <div class="card shadow">
+        <div class="card-header d-flex justify-content-between">
+            <h5 class="mb-0">Bikes cadastradas</h5>
+            <a href="adicionar.php" class="btn btn-success btn-sm">+ Nova Bike</a>
+        </div>
 
-        <!-- Listagem Inicio -->
-        <table class="table text-center table-bordered mt-3">
-            <thead class="table-light">
-                <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Nome</th>
-                    <th scope="col">E-mail</th>
-                    <th scope="col">Ações</th>
-                </tr>
-            </thead>
-            <tbody class="table-group-divider align-middle">
+        <div class="card-body">
 
-                <?php foreach ($lista as $item): ?>
+<?php if(isset($_GET['msg'])): ?>
+
+    <?php if($_GET['msg'] == 'add_ok'): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            ✅ Peça adicionada com sucesso!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
+
+    <?php if($_GET['msg'] == 'edit_ok'): ?>
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+            ✏️ Peça atualizada com sucesso!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
+
+    <?php if($_GET['msg'] == 'del_ok'): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            🗑️ Peça removida com sucesso!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
+
+<?php endif; ?>
+
+            <table class="table table-hover text-center align-middle">
+                <thead class="table-dark">
                     <tr>
-                        <th scope="row"><?= $item['id']; ?></th>
-                        <td><?= $item['nome']; ?></td>
-                        <td><?= $item['email']; ?></td>
+                        <th>ID</th>
+                        <th>Código</th>
+                        <th>Modelo</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                <?php foreach($lista as $item): ?>
+                    <tr>
+                        <td><?= $item['id'] ?></td>
+                        <td><?= $item['codigo'] ?></td>
+                        <td><?= $item['modelo'] ?></td>
+
                         <td>
-                            <a href="editar.php?id=<?= $item['id']; ?>" class="btn btn-primary">Editar</a>
-                            <a href="index.php?del=<?= $item['id']; ?>" class="btn btn-danger" onclick="return confirm('Excluir?')">Excluir</a>
+                            <?php if($item['status'] == 'disponivel'): ?>
+                                <span class="badge bg-success">Disponível</span>
+                            <?php else: ?>
+                                <span class="badge bg-danger">Alugada</span>
+                            <?php endif; ?>
+                        </td>
+
+                        <td>
+                            <a href="editar.php?id=<?= $item['id'] ?>" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="index.php?del=<?= $item['id'] ?>" class="btn btn-danger btn-sm">Excluir</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
+                </tbody>
 
-            </tbody>
-        </table>
-        <!-- Listagem Final -->
+            </table>
 
+        </div>
     </div>
 
-    <footer>
-        <nav class="navbar">
-            <div class="container-fluid">
-                <span class="navbar mx-auto">&copy; Todos os direitos reservados</span>
-            </div>
-        </nav>
-    </footer>
+</div>
 
-    <script >
-        const alertMsg = document.getElementById('alert-Msg')
+<script>
+setTimeout(() => {
+    const alert = document.querySelector('.alert');
+    if(alert){
+        alert.style.display = 'none';
+    }
+}, 3000);
+</script>
 
-        if(alertMsg){
-            setTimeout(() => {
-                alertMsg.style.display= 'none';
-            }, 3000);
-        }
-    </script>
-
-    <script src="assets/js/bootstrap.min.js"></script>
 </body>
-
 </html>

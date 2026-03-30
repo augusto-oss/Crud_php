@@ -3,7 +3,7 @@
 $dbname = 'crud_php';
 $host = 'localhost:4306';
 $dbuser = 'root';
-$dbpass = '';
+$dbpass = 'your_password';
 
 
 try {

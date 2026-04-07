@@ -1,16 +1,16 @@
 <?php
 require 'config.php';
 
-if (!empty($_GET['del'])) {
-    $id = $_GET['del'];
-    $sql = $db->prepare("DELETE FROM bikes WHERE id = :id");
-    $sql->bindValue(':id', $id);
-    $sql->execute();
-    header("Location: index.php?msg=del_ok");
-    exit;
+if (!empty($_GET['del'])) { // verifica se veio id para deletar
+    $id = $_GET['del']; // pega id da URL
+    $sql = $db->prepare("DELETE FROM bikes WHERE id = :id"); // prepara delete
+    $sql->bindValue(':id', $id); // vincula id
+    $sql->execute(); // executa delete no banco
+    header("Location: index.php?msg=del_ok"); // redireciona com mensagem
+    exit; // encerra script
 }
 
-$lista = $db->query("SELECT * FROM bikes")->fetchAll();
+$lista = $db->query("SELECT * FROM bikes")->fetchAll(); // busca todas as bikes
 ?>
 
 <!DOCTYPE html>
@@ -79,7 +79,7 @@ $lista = $db->query("SELECT * FROM bikes")->fetchAll();
                 </thead>
 
                 <tbody>
-                <?php foreach($lista as $item): ?>
+                <?php foreach($lista as $item): ?> 
                     <tr>
                         <td><?= $item['id'] ?></td>
                         <td><?= $item['codigo'] ?></td>
